@@ -62,14 +62,7 @@ def save_data(df, output_file):
 
 def main():
     spreadsheets = [
-        {"id": "1zmFxboRQEAhtE3_ZLJZo6zfrhhKU2z7uw2cTpeiBpyg", "sheets": [1020960867]},
-        {"id": "1sU3hRnkRwd4vEX1GHEGNHzhl6LAeCEvlW88cVweRKZI", "sheets": [1555544843]},
-        {"id": "15RLiTy-Q1NIzR6LE5rS53NYH9oCU5hnkFMIg4S4GNuU", "sheets": [103339423]},
-        {"id": "1fF4Hikljar-u1Vcd9oE_YCEg6wxH3RrdRNITzPA0tdY", "sheets": [485143404]},
-        {"id": "1SQzdOYiACYRSLJszpG_bbk9p3qmq5K-ihjlCbjeYuCI", "sheets": [491961302]},
-        {"id": "1M1IjQZ-_yWRxUf8r0CWqy6eR0f03s5VeCzdpA0R6Gyg", "sheets": [1833732016]},
-        {"id": "1v_qgEvSJFWl0h7_dLEgVtduHZ70uJ81EGczFm1Znzak", "sheets": [1230136339]}
-
+        {"id": "168yLL5EJwDQCFKKR1CkcplcEiAxuczdEom8uX0kXBUg", "sheets": [734652276]},
     ]
     
     print("Парсинг нескольких таблиц Google Sheets")
@@ -84,7 +77,7 @@ def main():
             
             if df is not None:
                 df = clean_data(df)
-                save_data(df, f'stkz_certificates_{i}_{j}.csv')
+                save_data(df, f'goods_certificates_{i}_{j}.csv')
     
     print("\nВсе данные успешно обработаны и сохранены.")
 

@@ -1,3 +1,6 @@
 pandas
 requests
 chardet
+psycopg2
+os
+python-dotenv
