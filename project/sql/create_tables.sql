@@ -1,92 +1,89 @@
-CREATE TABLE RCC (
-    rcc_code SERIAL PRIMARY KEY,
-    rcc_name VARCHAR NOT NULL
+CREATE TABLE certificate_forms (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50) UNIQUE NOT NULL
 );
 
-CREATE TABLE ORIGIN_CERTIFICATES (
-    certificate_number VARCHAR PRIMARY KEY,
-    rcc_code INT REFERENCES RCC(rcc_code),
-    form_number VARCHAR,
-    issue_year INT,
-    purpose VARCHAR,
-    category VARCHAR,
-    manufacturer_bin VARCHAR,
-    manufacturer_name VARCHAR,
-    manufacturer_address TEXT,
-    issue_date DATE,
-    expiry_date DATE,
-    certificate_status VARCHAR,
-    recipient_bin VARCHAR,
-    recipient_name VARCHAR,
-    recipient_address TEXT,
-    certificate_form VARCHAR
+CREATE TABLE category_certificates (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) UNIQUE NOT NULL
 );
 
-CREATE TABLE HS_CODES (
-    hs_code VARCHAR PRIMARY KEY,
-    name VARCHAR
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  tn_ved_eaes VARCHAR(255) UNIQUE NOT NULL,
+  name VARCHAR(50),
+  kp_ved VARCHAR(10),
+  unit_measurement VARCHAR(50),
+  unit_code VARCHAR(10),
+  quantity INT
 );
 
-CREATE TABLE CP_VED_CODES (  
-    cp_ved_code VARCHAR PRIMARY KEY,
-    name VARCHAR NOT NULL,
-    notes TEXT
+CREATE TABLE manufacturers (
+  bin_iin VARCHAR(12) PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  legal_address TEXT,
+  actual_address TEXT,
+  phone VARCHAR(20),
+  email VARCHAR(100),
+  website VARCHAR(100),
+  date_included_in_the_registry DATE,
+  date_of_change DATE,
+  number_of_employees INT,
+  oced_code VARCHAR(50),
+  kato VARCHAR(50),
+  production_capacity VARCHAR(100)
 );
 
-CREATE TABLE CERTIFICATE_PRODUCTS (
-    id SERIAL PRIMARY KEY,
-    certificate_number VARCHAR REFERENCES ORIGIN_CERTIFICATES(certificate_number),
-    product_name VARCHAR,
-    hs_code VARCHAR REFERENCES HS_CODES(hs_code),
-    cp_ved_code VARCHAR REFERENCES CP_VED_CODES(cp_ved_code),  
-    product_quantity DECIMAL,
-    unit_of_measure VARCHAR,
-    unit_code VARCHAR,
-    origin_criterion VARCHAR,
-    dvc VARCHAR
+CREATE TABLE document_compliances (
+  document_id VARCHAR(50) PRIMARY KEY,
+  issue_date DATE,
+  end_date DATE,
+  authorisation_licence VARCHAR(50),
+  manufacturer_bin_iin VARCHAR(12) NOT NULL,
+  CONSTRAINT fk_document_compliances_manufacturer
+    FOREIGN KEY (manufacturer_bin_iin)
+    REFERENCES manufacturers(bin_iin)
 );
 
-CREATE TABLE COUNTRIES (
-    country_id SERIAL PRIMARY KEY,
-    country_name VARCHAR NOT NULL,
-    country_code VARCHAR NOT NULL
+CREATE TABLE rpp (
+  rpp_code SERIAL PRIMARY KEY,
+  rpp_name VARCHAR(50) UNIQUE NOT NULL
 );
 
-CREATE TABLE CERTIFICATE_COUNTRIES (
-    id SERIAL PRIMARY KEY,
-    certificate_number VARCHAR REFERENCES ORIGIN_CERTIFICATES(certificate_number),
-    origin_country_id INT REFERENCES COUNTRIES(country_id),
-    recipient_country_id INT REFERENCES COUNTRIES(country_id)
+CREATE TABLE industrial_certificates (
+  id SERIAL PRIMARY KEY,
+  certificate_number VARCHAR(100) UNIQUE NOT NULL
 );
 
-CREATE TABLE INDUSTRIAL_CERTIFICATES (
-    industrial_certificate_reg_number VARCHAR PRIMARY KEY,
-    manufacturer_bin VARCHAR,
-    manufacturer_name VARCHAR,
-    okved_activity_type VARCHAR,
-    kato_region VARCHAR,
-    legal_address TEXT,
-    postal_address TEXT,
-    material_technical_base_address TEXT,
-    phone VARCHAR,
-    email VARCHAR,
-    website VARCHAR,
-    number_of_employees INT,
-    registry_inclusion_date DATE,
-    modification_date DATE,
-    actualization_date DATE
+CREATE TABLE countries (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50) UNIQUE NOT NULL
 );
 
-CREATE TABLE INDUSTRIAL_CERTIFICATE_PRODUCTS (
-    id SERIAL PRIMARY KEY,
-    industrial_certificate_reg_number VARCHAR REFERENCES INDUSTRIAL_CERTIFICATES(industrial_certificate_reg_number),
-    product_name VARCHAR,
-    production_capacity DECIMAL,
-    hs_code VARCHAR REFERENCES HS_CODES(hs_code),
-    cp_ved_code VARCHAR REFERENCES CP_VED_CODES(cp_ved_code), 
-    conformity_document_number VARCHAR,
-    document_issue_date DATE,
-    document_expiry_date DATE,
-    license_number VARCHAR,
-    license_date DATE
+CREATE TABLE certificates (
+  id SERIAL PRIMARY KEY,
+  rpp_code INT NOT NULL,
+  manufacturer_bin_iin VARCHAR(12) NOT NULL,
+  product_id INT NOT NULL,
+  form_id INT NOT NULL,
+  category_id INT NOT NULL,
+  industrial_certificate_id INT NOT NULL,
+  certificate_number VARCHAR(50) UNIQUE NOT NULL,
+  blank_number VARCHAR(50),
+  issue_date DATE,
+  purpose_receipt VARCHAR(255),
+  origin_criterion VARCHAR(100),
+  status VARCHAR(50),
+  date_ending DATE,
+  dvc VARCHAR(100),
+  export_country_id INT NOT NULL,
+  import_country_id INT NOT NULL,
+  CONSTRAINT fk_certificates_rpp FOREIGN KEY (rpp_code) REFERENCES rpp(rpp_code),
+  CONSTRAINT fk_certificates_form FOREIGN KEY (form_id) REFERENCES certificate_forms(id),
+  CONSTRAINT fk_certificates_category FOREIGN KEY (category_id) REFERENCES category_certificates(id),
+  CONSTRAINT fk_certificates_manufacturer FOREIGN KEY (manufacturer_bin_iin) REFERENCES manufacturers(bin_iin),
+  CONSTRAINT fk_certificates_product FOREIGN KEY (product_id) REFERENCES products(id),
+  CONSTRAINT fk_certificates_industrial FOREIGN KEY (industrial_certificate_id) REFERENCES industrial_certificates(id),
+  CONSTRAINT fk_certificates_export_country FOREIGN KEY (export_country_id) REFERENCES countries(id),
+  CONSTRAINT fk_certificates_import_country FOREIGN KEY (import_country_id) REFERENCES countries(id)
 );
