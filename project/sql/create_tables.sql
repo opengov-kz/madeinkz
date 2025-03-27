@@ -11,7 +11,7 @@ CREATE TABLE category_certificates (
 CREATE TABLE products (
   id SERIAL PRIMARY KEY,
   tn_ved_eaes VARCHAR(255) UNIQUE NOT NULL,
-  name VARCHAR(50),
+  name VARCHAR(255),
   kp_ved VARCHAR(10),
   unit_measurement VARCHAR(50),
   unit_code VARCHAR(10),
@@ -25,7 +25,7 @@ CREATE TABLE manufacturers (
   actual_address TEXT,
   phone VARCHAR(20),
   email VARCHAR(100),
-  website VARCHAR(100),
+  website VARCHAR(255),
   date_included_in_the_registry DATE,
   date_of_change DATE,
   number_of_employees INT,
@@ -35,10 +35,10 @@ CREATE TABLE manufacturers (
 );
 
 CREATE TABLE document_compliances (
-  document_id VARCHAR(50) PRIMARY KEY,
+  document_id VARCHAR(100) PRIMARY KEY,
   issue_date DATE,
   end_date DATE,
-  authorisation_licence VARCHAR(50),
+  authorisation_licence VARCHAR(100),
   manufacturer_bin_iin VARCHAR(12) NOT NULL,
   CONSTRAINT fk_document_compliances_manufacturer
     FOREIGN KEY (manufacturer_bin_iin)
@@ -72,10 +72,10 @@ CREATE TABLE certificates (
   blank_number VARCHAR(50),
   issue_date DATE,
   purpose_receipt VARCHAR(255),
-  origin_criterion VARCHAR(100),
-  status VARCHAR(50),
+  origin_criterion VARCHAR(255),
+  status VARCHAR(255),
   date_ending DATE,
-  dvc VARCHAR(100),
+  dvc VARCHAR(255),
   export_country_id INT NOT NULL,
   import_country_id INT NOT NULL,
   CONSTRAINT fk_certificates_rpp FOREIGN KEY (rpp_code) REFERENCES rpp(rpp_code),
