@@ -1,44 +1,44 @@
 CREATE TABLE certificate_forms (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(50) UNIQUE NOT NULL
+  name TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE category_certificates (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(100) UNIQUE NOT NULL
+  name TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE products (
   id SERIAL PRIMARY KEY,
-  tn_ved_eaes VARCHAR(255) UNIQUE NOT NULL,
-  name VARCHAR(255),
-  kp_ved VARCHAR(10),
-  unit_measurement VARCHAR(50),
-  unit_code VARCHAR(10),
+  tn_ved_eaes VARCHAR(500) UNIQUE NOT NULL,
+  name TEXT,
+  kp_ved VARCHAR(500),
+  unit_measurement VARCHAR(500),
+  unit_code VARCHAR(500),
   quantity INT
 );
 
 CREATE TABLE manufacturers (
   bin_iin VARCHAR(12) PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
+  name VARCHAR(1000) NOT NULL,
   legal_address TEXT,
   actual_address TEXT,
-  phone VARCHAR(20),
-  email VARCHAR(100),
-  website VARCHAR(255),
+  phone TEXT,
+  email VARCHAR(1000),
+  website VARCHAR(1000),
   date_included_in_the_registry DATE,
   date_of_change DATE,
   number_of_employees INT,
-  oced_code VARCHAR(50),
-  kato VARCHAR(50),
-  production_capacity VARCHAR(100)
+  oced_code VARCHAR(1000),
+  kato VARCHAR(1000),
+  production_capacity VARCHAR(1000)
 );
 
 CREATE TABLE document_compliances (
-  document_id VARCHAR(100) PRIMARY KEY,
+  document_id TEXT PRIMARY KEY,
   issue_date DATE,
   end_date DATE,
-  authorisation_licence VARCHAR(100),
+  authorisation_licence TEXT,
   manufacturer_bin_iin VARCHAR(12) NOT NULL,
   CONSTRAINT fk_document_compliances_manufacturer
     FOREIGN KEY (manufacturer_bin_iin)
@@ -47,17 +47,17 @@ CREATE TABLE document_compliances (
 
 CREATE TABLE rpp (
   rpp_code SERIAL PRIMARY KEY,
-  rpp_name VARCHAR(50) UNIQUE NOT NULL
+  rpp_name TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE industrial_certificates (
   id SERIAL PRIMARY KEY,
-  certificate_number VARCHAR(100) UNIQUE NOT NULL
+  certificate_number VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE countries (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(50) UNIQUE NOT NULL
+  name VARCHAR(500) UNIQUE NOT NULL
 );
 
 CREATE TABLE certificates (
@@ -68,14 +68,14 @@ CREATE TABLE certificates (
   form_id INT NOT NULL,
   category_id INT NOT NULL,
   industrial_certificate_id INT NOT NULL,
-  certificate_number VARCHAR(50) UNIQUE NOT NULL,
-  blank_number VARCHAR(50),
+  certificate_number VARCHAR(500) UNIQUE NOT NULL,
+  blank_number VARCHAR(1000),
   issue_date DATE,
-  purpose_receipt VARCHAR(255),
-  origin_criterion VARCHAR(255),
-  status VARCHAR(255),
+  purpose_receipt TEXT,
+  origin_criterion TEXT,
+  status VARCHAR(500),
   date_ending DATE,
-  dvc VARCHAR(255),
+  dvc VARCHAR(500),
   export_country_id INT NOT NULL,
   import_country_id INT NOT NULL,
   CONSTRAINT fk_certificates_rpp FOREIGN KEY (rpp_code) REFERENCES rpp(rpp_code),
