@@ -52,17 +52,24 @@ def clean_data(df):
 def save_data(df, output_file):
     if df is not None:
         try:
-            output_dir = "results"
+            output_dir = "project/results"
             os.makedirs(output_dir, exist_ok=True)
             output_path = os.path.join(output_dir, output_file)
-            df.to_csv(output_path, index=False, encoding='utf-8')
+            df.to_csv(output_path, index=False, encoding='utf-8') 
             print(f"Данные сохранены в файл: {output_path}")
         except Exception as e:
             print(f"Ошибка при сохранении файла: {str(e)}")
 
 def main():
     spreadsheets = [
-        {"id": "168yLL5EJwDQCFKKR1CkcplcEiAxuczdEom8uX0kXBUg", "sheets": [734652276]},
+        {"id": "1sU3hRnkRwd4vEX1GHEGNHzhl6LAeCEvlW88cVweRKZI", "sheets": [1555544843]},
+        {"id": "1zmFxboRQEAhtE3_ZLJZo6zfrhhKU2z7uw2cTpeiBpyg", "sheets": [1020960867]},
+        {"id": "15RLiTy-Q1NIzR6LE5rS53NYH9oCU5hnkFMIg4S4GNuU", "sheets": [103339423]},
+        {"id": "1fF4Hikljar-u1Vcd9oE_YCEg6wxH3RrdRNITzPA0tdY", "sheets": [485143404]},
+        {"id": "1SQzdOYiACYRSLJszpG_bbk9p3qmq5K-ihjlCbjeYuCI", "sheets": [491961302]},
+        {"id": "1M1IjQZ-_yWRxUf8r0CWqy6eR0f03s5VeCzdpA0R6Gyg", "sheets": [1833732016]},
+        {"id": "1v_qgEvSJFWl0h7_dLEgVtduHZ70uJ81EGczFm1Znzak", "sheets": [1230136339]},
+        {"id": "168yLL5EJwDQCFKKR1CkcplcEiAxuczdEom8uX0kXBUg", "sheets": [734652276]}
     ]
     
     print("Парсинг нескольких таблиц Google Sheets")

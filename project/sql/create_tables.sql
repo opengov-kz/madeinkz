@@ -1,89 +1,165 @@
-CREATE TABLE certificate_forms (
-  id SERIAL PRIMARY KEY,
-  name TEXT UNIQUE NOT NULL
+BEGIN;
+
+CREATE TABLE IF NOT EXISTS category_certificates
+(
+    id serial NOT NULL,
+    name text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT category_certificates_pkey PRIMARY KEY (id),
+    CONSTRAINT category_certificates_name_key UNIQUE (name)
 );
 
-CREATE TABLE category_certificates (
-  id SERIAL PRIMARY KEY,
-  name TEXT UNIQUE NOT NULL
+CREATE TABLE IF NOT EXISTS certificate_forms
+(
+    id serial NOT NULL,
+    name text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT certificate_forms_pkey PRIMARY KEY (id),
+    CONSTRAINT certificate_forms_name_key UNIQUE (name)
 );
 
-CREATE TABLE products (
-  id SERIAL PRIMARY KEY,
-  tn_ved_eaes VARCHAR(500) UNIQUE NOT NULL,
-  name TEXT,
-  kp_ved VARCHAR(500),
-  unit_measurement VARCHAR(500),
-  unit_code VARCHAR(500),
-  quantity INT
+
+CREATE TABLE IF NOT EXISTS certificates
+(
+    id serial NOT NULL,
+    rpp_id integer,
+    manufacturer_bin_iin text COLLATE pg_catalog."default",
+    product_id integer,
+    form_id integer,
+    category_id integer,
+    industrial_certificate_id integer,
+    certificate_number character varying(3000) COLLATE pg_catalog."default" ,
+    blank_number character varying(3000) COLLATE pg_catalog."default",
+    issue_date date,
+    purpose_receipt text COLLATE pg_catalog."default",
+    origin_criterion text COLLATE pg_catalog."default",
+    status character varying(3000) COLLATE pg_catalog."default",
+    date_ending date,
+    export_country_id integer,
+    import_country_id integer,
+    CONSTRAINT certificates_pkey PRIMARY KEY (id),
+    CONSTRAINT certificates_certificate_number_key UNIQUE (certificate_number)
 );
 
-CREATE TABLE manufacturers (
-  bin_iin VARCHAR(12) PRIMARY KEY,
-  name VARCHAR(1000) NOT NULL,
-  legal_address TEXT,
-  actual_address TEXT,
-  phone TEXT,
-  email VARCHAR(1000),
-  website VARCHAR(1000),
-  date_included_in_the_registry DATE,
-  date_of_change DATE,
-  number_of_employees INT,
-  oced_code VARCHAR(1000),
-  kato VARCHAR(1000),
-  production_capacity VARCHAR(1000)
+CREATE TABLE IF NOT EXISTS countries
+(
+    id serial NOT NULL,
+    name character varying(3000) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT countries_pkey PRIMARY KEY (id),
+    CONSTRAINT countries_name_key UNIQUE (name)
 );
 
-CREATE TABLE document_compliances (
-  document_id TEXT PRIMARY KEY,
-  issue_date DATE,
-  end_date DATE,
-  authorisation_licence TEXT,
-  manufacturer_bin_iin VARCHAR(12) NOT NULL,
-  CONSTRAINT fk_document_compliances_manufacturer
-    FOREIGN KEY (manufacturer_bin_iin)
-    REFERENCES manufacturers(bin_iin)
+CREATE TABLE IF NOT EXISTS document_compliances
+(
+    document_id text COLLATE pg_catalog."default" NOT NULL,
+    issue_date date,
+    end_date date,
+    authorisation_licence text COLLATE pg_catalog."default",
+    manufacturer_bin_iin text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT document_compliances_pkey PRIMARY KEY (document_id)
 );
 
-CREATE TABLE rpp (
-  rpp_code SERIAL PRIMARY KEY,
-  rpp_name TEXT UNIQUE NOT NULL
+CREATE TABLE IF NOT EXISTS industrial_certificates
+(
+    id serial NOT NULL,
+    certificate_number character varying(3000) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT industrial_certificates_pkey PRIMARY KEY (id),
+    CONSTRAINT industrial_certificates_certificate_number_key UNIQUE (certificate_number)
 );
 
-CREATE TABLE industrial_certificates (
-  id SERIAL PRIMARY KEY,
-  certificate_number VARCHAR(255) UNIQUE NOT NULL
+CREATE TABLE IF NOT EXISTS manufacturers
+(
+    bin_iin text COLLATE pg_catalog."default" NOT NULL,
+    name text COLLATE pg_catalog."default" NOT NULL,
+    legal_address text COLLATE pg_catalog."default",
+    actual_address text COLLATE pg_catalog."default",
+    phone text COLLATE pg_catalog."default",
+    email character varying(3000) COLLATE pg_catalog."default",
+    website character varying(3000) COLLATE pg_catalog."default",
+    date_included_in_the_registry date,
+    date_of_change date,
+    number_of_employees integer,
+    oced_code character varying(3000) COLLATE pg_catalog."default",
+    kato character varying(3000) COLLATE pg_catalog."default",
+    production_capacity character varying(3000) COLLATE pg_catalog."default",
+    CONSTRAINT manufacturers_pkey PRIMARY KEY (bin_iin)
 );
 
-CREATE TABLE countries (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(500) UNIQUE NOT NULL
+CREATE TABLE IF NOT EXISTS products
+(
+    id serial NOT NULL,
+    tn_ved_eaes character varying(3000) COLLATE pg_catalog."default" NOT NULL,
+    name text COLLATE pg_catalog."default",
+    kp_ved character varying(3000) COLLATE pg_catalog."default",
+    unit_measurement character varying(3000) COLLATE pg_catalog."default",
+    unit_code character varying(3000) COLLATE pg_catalog."default",
+    quantity bigint,
+    dvc character varying(3000) COLLATE pg_catalog."default",  -- Добавлено поле dvc
+    CONSTRAINT products_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE certificates (
-  id SERIAL PRIMARY KEY,
-  rpp_code INT NOT NULL,
-  manufacturer_bin_iin VARCHAR(12) NOT NULL,
-  product_id INT NOT NULL,
-  form_id INT NOT NULL,
-  category_id INT NOT NULL,
-  industrial_certificate_id INT NOT NULL,
-  certificate_number VARCHAR(500) UNIQUE NOT NULL,
-  blank_number VARCHAR(1000),
-  issue_date DATE,
-  purpose_receipt TEXT,
-  origin_criterion TEXT,
-  status VARCHAR(500),
-  date_ending DATE,
-  dvc VARCHAR(500),
-  export_country_id INT NOT NULL,
-  import_country_id INT NOT NULL,
-  CONSTRAINT fk_certificates_rpp FOREIGN KEY (rpp_code) REFERENCES rpp(rpp_code),
-  CONSTRAINT fk_certificates_form FOREIGN KEY (form_id) REFERENCES certificate_forms(id),
-  CONSTRAINT fk_certificates_category FOREIGN KEY (category_id) REFERENCES category_certificates(id),
-  CONSTRAINT fk_certificates_manufacturer FOREIGN KEY (manufacturer_bin_iin) REFERENCES manufacturers(bin_iin),
-  CONSTRAINT fk_certificates_product FOREIGN KEY (product_id) REFERENCES products(id),
-  CONSTRAINT fk_certificates_industrial FOREIGN KEY (industrial_certificate_id) REFERENCES industrial_certificates(id),
-  CONSTRAINT fk_certificates_export_country FOREIGN KEY (export_country_id) REFERENCES countries(id),
-  CONSTRAINT fk_certificates_import_country FOREIGN KEY (import_country_id) REFERENCES countries(id)
+CREATE UNIQUE INDEX unique_product ON products (tn_ved_eaes, md5(name));
+
+CREATE TABLE IF NOT EXISTS rpp
+(
+    id serial NOT NULL,
+    code character varying(3000) COLLATE pg_catalog."default",
+    name text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT rpp_pkey PRIMARY KEY (id),
+    CONSTRAINT rpp_code_key UNIQUE (code),
+    CONSTRAINT rpp_name_key UNIQUE (name)
 );
+
+ALTER TABLE IF EXISTS certificates
+    ADD CONSTRAINT certificates_category_id_fkey FOREIGN KEY (category_id)
+    REFERENCES category_certificates (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE SET NULL;
+
+ALTER TABLE IF EXISTS certificates
+    ADD CONSTRAINT certificates_export_country_id_fkey FOREIGN KEY (export_country_id)
+    REFERENCES countries (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+ALTER TABLE IF EXISTS certificates
+    ADD CONSTRAINT certificates_form_id_fkey FOREIGN KEY (form_id)
+    REFERENCES certificate_forms (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+ALTER TABLE IF EXISTS certificates
+    ADD CONSTRAINT certificates_import_country_id_fkey FOREIGN KEY (import_country_id)
+    REFERENCES countries (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+ALTER TABLE IF EXISTS certificates
+    ADD CONSTRAINT certificates_industrial_certificate_id_fkey FOREIGN KEY (industrial_certificate_id)
+    REFERENCES industrial_certificates (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+ALTER TABLE IF EXISTS certificates
+    ADD CONSTRAINT certificates_manufacturer_bin_iin_fkey FOREIGN KEY (manufacturer_bin_iin)
+    REFERENCES manufacturers (bin_iin) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE CASCADE;
+
+ALTER TABLE IF EXISTS certificates
+    ADD CONSTRAINT certificates_product_id_fkey FOREIGN KEY (product_id)
+    REFERENCES products (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE CASCADE;
+
+ALTER TABLE IF EXISTS certificates
+    ADD CONSTRAINT certificates_rpp_id_fkey FOREIGN KEY (rpp_id)
+    REFERENCES rpp (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE SET NULL;
+
+ALTER TABLE IF EXISTS document_compliances
+    ADD CONSTRAINT fk_document_compliances_manufacturer FOREIGN KEY (manufacturer_bin_iin)
+    REFERENCES manufacturers (bin_iin) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+END;
