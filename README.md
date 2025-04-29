@@ -11,9 +11,10 @@ The project aims to research the origin of goods and develop a database to recor
 ### Scripts
 
 1. `database/create_db.py`Creates the PostgreSQL database.
-2. `parse_to_csv/parse_atameken.py`Downloads data from Google Sheets and saves it as CSV files in the `results` folder.
-3. `parse_to_db/1_1-8.py`Reads CSV files from the `results` folder and inserts the data into the previously created database. The `main.py` script runs scripts from 1 to 8.
-4. `parse_to_opengov/parse_to_opengov.py`
+2. `database/save_dataset.py`Saves data from DB in csv format.
+3. `parse_to_csv/parse_atameken.py`Downloads data from Google Sheets and saves it as CSV files in the `results` folder.
+4. `parse_to_db/1_1-8.py`Reads CSV files from the `results` folder and inserts the data into the previously created database. The `main.py` script runs scripts from 1 to 8.
+5. `parse_to_opengov/parse_to_opengov.py`
    Uploads CSV files from the `datasets` folder to `data.opengov.kz` via API.
 
 ---
