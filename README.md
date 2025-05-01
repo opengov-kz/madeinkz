@@ -81,8 +81,24 @@ python parse_to_db/main.py
 
 Run the `parse_to_opengov.py` script to upload the CSV files from the `datasets` folder to `data.opengov.kz` via the API. Parameters like CKAN_URL, API_KEY, ORGANIZATION_I can be changed in .env.example file.
 
+2 options to run script. 
+
+Change parameters in .env.example file and run.
+
 ```
 python parse_to_db/main.py
+```
+
+Run the script with CKAN parameters specified via command-line flags:
+
+| Variable                | Description                                                      |
+| ----------------------- | ---------------------------------------------------------------- |
+| https://data.opengov.kz | The URL of the CKAN                                              |
+| YOUR_API_KEY            | Your personal API key used to authenticate and authorize access |
+| your-org-id             | The organization ID                                            |
+
+```
+python parse_to_opengov.py --ckan-url "https://data.opengov.kz" --api-key "YOUR_API_KEY" --org-id "your-org-id"
 ```
 
 ### Important Notes

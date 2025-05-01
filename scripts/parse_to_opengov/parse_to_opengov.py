@@ -1,9 +1,10 @@
 import os
 from ckanapi import RemoteCKAN
+import argparse
+from dotenv import load_dotenv
 
-CKAN_URL = "https://data.opengov.kz"
-API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJZdWhCMXZuQU5DRDVXTGd6WjZOQmNLcXV0a2RIZVZYM21JQkRQbjMtZnMwIiwiaWF0IjoxNzQ1NDk5NDU4fQ.k3H5I-4L9TH7KKJFS1URtK59dioBnDtJ9_YEShCJfsI"
-ORGANIZATION_ID = "atameken"
+load_dotenv()
+
 
 def create_dataset(remote_ckan, dataset_name, title, owner_org):
     dataset_descriptions = {
@@ -70,7 +71,23 @@ def upload_resource(remote_ckan, package_id_or_name, filepath, resource_name):
 
 
 def main():
-    ckan = RemoteCKAN(CKAN_URL, apikey=API_KEY)
+    parser = argparse.ArgumentParser(description="Upload datasets to CKAN portal.")
+    parser.add_argument("--ckan-url")
+    parser.add_argument("--api-key")
+    parser.add_argument("--org-id")
+
+    args = parser.parse_args()
+
+    ckan_url = args.ckan_url or os.getenv("CKAN_URL")
+    api_key = args.api_key or os.getenv("API_KEY")
+    organization_id = args.org_id or os.getenv("ORGANIZATION_ID")
+
+    if not all([ckan_url, api_key, organization_id]):
+        print("❌ Ошибка: Не все параметры заданы. Убедитесь, что они переданы через аргументы или присутствуют в .env.")
+        return
+
+    ckan = RemoteCKAN(ckan_url, apikey=api_key)
+
     files = [
         "datasets/dataset1.csv",
         "datasets/dataset2.csv",
@@ -82,28 +99,23 @@ def main():
         "datasets/dataset8.csv",
     ]
 
-    for file in files:
-        filepath = file
+    for filepath in files:
         filename = os.path.basename(filepath)
-        base_name, ext = os.path.splitext(filename)
-
+        base_name, _ = os.path.splitext(filename)
         dataset_name = base_name
-        title = base_name
 
         try:
-            created_dataset = create_dataset(ckan, dataset_name, title, ORGANIZATION_ID)
-            print(f"Набор данных создан: {created_dataset.get('name')}")
+            created_dataset = create_dataset(ckan, dataset_name, dataset_name, organization_id)
+            print(f"✅ Набор данных создан: {created_dataset.get('name')}")
         except Exception as e:
-            print(f"Ошибка при создании набора данных: {e}")
+            print(f"❌ Ошибка при создании набора данных: {e}")
             continue
 
-        resource_name = filename
-
         try:
-            created_resource = upload_resource(ckan, dataset_name, filepath, resource_name)
-            print(f"Ресурс создан, ID ресурса: {created_resource.get('id')}")
+            created_resource = upload_resource(ckan, dataset_name, filepath, filename)
+            print(f"✅ Ресурс загружен: {created_resource.get('id')}")
         except Exception as e:
-            print(f"Ошибка при загрузке ресурса: {e}")
+            print(f"❌ Ошибка при загрузке ресурса: {e}")
             continue
 
 
