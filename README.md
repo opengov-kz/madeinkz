@@ -30,6 +30,22 @@ The project aims to research the origin of goods and develop a database to recor
 
 ## How to Run the Project
 
+**.ENV file:**
+
+Change .env.example to .env file and change parameters of your database and SCAN api.
+```bash
+## Parameters for databse
+DB_NAME=made_in_kz
+DB_USER=postgres
+DB_PASSWORD=example
+DB_HOST=localhost
+DB_PORT=5432
+## Parameters for parse_to_opengov.py
+CKAN_URL=https://data.opengov.kz
+API_KEY=example
+ORGANIZATION_ID=example
+```
+
 **Create the Database:**
 
 Run the `create_db.py` script to create the database.
@@ -56,7 +72,7 @@ python parse_to_db/main.py
 
 **Upload Data to data.opengov.kz:**
 
-Run the `parse_to_opengov.py` script to upload the CSV files from the `datasets` folder to `data.opengov.kz` via the API.
+Run the `parse_to_opengov.py` script to upload the CSV files from the `datasets` folder to `data.opengov.kz` via the API. Parameters like CKAN_URL, API_KEY, ORGANIZATION_I can be changed in .env.example file.
 
 ```
 python parse_to_db/main.py
@@ -64,10 +80,14 @@ python parse_to_db/main.py
 
 ### Important Notes
 
+* Change .env.example to .env
 * All scripts use an API key for access to the `data.opengov.kz` system. Ensure you have the correct API key.
 * You will need PostgreSQL installed and configured on your machine to work with the database.
 * Make sure all required Python libraries are installed. You can install them using the following command:
   `pip install -r requirements.txt`
+
+## Data Sources
+All data for this project was collected from https://atameken.kz/ru/services/56-reestr-sertifikatov-o-proishozhdenii-tovara
 
 ## License
 
