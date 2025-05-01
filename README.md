@@ -33,18 +33,25 @@ The project aims to research the origin of goods and develop a database to recor
 **.ENV file:**
 
 Change .env.example to .env file and change parameters of your database and SCAN api.
-```bash
-## Parameters for databse
-DB_NAME=made_in_kz
-DB_USER=postgres
-DB_PASSWORD=example
-DB_HOST=localhost
-DB_PORT=5432
-## Parameters for parse_to_opengov.py
-CKAN_URL=https://data.opengov.kz
-API_KEY=example
-ORGANIZATION_ID=example
-```
+
+**Parameters for database**
+
+| Variable Name | Description                         | Value      |
+| ------------- | ----------------------------------- | ---------- |
+| DB_NAME       | Name of the database                | made_in_kz |
+| DB_USER       | Username to connect to the database | example    |
+| DB_PASSWORD   | Password for the database user      | example    |
+| DB_HOST       | Address of the database server      | localhost  |
+| DB_PORT       | Port on which the database listens  | 5432       |
+
+
+**Parameters for SCAN API**
+
+| Variable Name   | Description                                  | Value                   |
+| --------------- | -------------------------------------------- | ----------------------- |
+| CKAN_URL        | Base URL of the CKAN data portal             | https://data.opengov.kz |
+| API_KEY         | API key for authenticating with the CKAN API | example                 |
+| ORGANIZATION_ID | ID of your organization on the CKAN portal   | example                 |
 
 **Create the Database:**
 
@@ -56,7 +63,7 @@ python database/create_db.py
 
 **Download Data from Google Sheets:**
 
-Run the `parse_atameken.py` script to download data from Google Sheets and save it as CSV files in the `results` folder.  
+Run the `parse_atameken.py` script to download data from Google Sheets and save it as CSV files in the `results` folder.
 
 ```
 python parse_to_csv/parse_atameken.py
@@ -87,6 +94,7 @@ python parse_to_db/main.py
   `pip install -r requirements.txt`
 
 ## Data Sources
+
 All data for this project was collected from https://atameken.kz/ru/services/56-reestr-sertifikatov-o-proishozhdenii-tovara
 
 ## License
